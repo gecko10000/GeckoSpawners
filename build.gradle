@@ -41,9 +41,11 @@ tasks {
 
 shadowJar {
     relocate 'redempt.redlib', 'io.github.gecko10000.GeckoSpawners.redlib'
+    relocate 'net.kyori', 'io.github.gecko10000.GeckoSpawners.kyori'
 }
 
 jar.configure {
     actions.clear()
+    dependsOn clean
     dependsOn shadowJar
 }
