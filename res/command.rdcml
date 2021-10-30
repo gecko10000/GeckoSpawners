@@ -1,0 +1,7 @@
+geckospawners, gs {
+    reload {
+        permission geckospawners.reload
+        hook reload
+        help Reload the plugin configs
+    }
+}

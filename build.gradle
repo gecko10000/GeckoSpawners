@@ -1,0 +1,49 @@
+plugins {
+    id 'java'
+    id 'idea'
+    id 'com.github.johnrengelman.shadow' version '7.1.0'
+    id 'io.papermc.paperweight.userdev' version '1.1.12'
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir "src"
+        }
+        resources {
+            srcDir "res"
+        }
+    }
+}
+
+group 'io.github.gecko10000'
+version '0.1'
+sourceCompatibility=16
+targetCompatibility=16
+
+repositories {
+    maven { url 'https://jitpack.io' }
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'com.github.Redempt:RedLib:6.0.9.1'
+    implementation 'net.kyori:adventure-text-minimessage:4.1.0-SNAPSHOT'
+    paperweightDevelopmentBundle 'io.papermc.paper:dev-bundle:1.17.1-R0.1-SNAPSHOT'
+}
+
+tasks {
+    build {
+        dependsOn(reobfJar)
+    }
+}
+
+shadowJar {
+    relocate 'redempt.redlib', 'io.github.gecko10000.GeckoSpawners.redlib'
+}
+
+jar.configure {
+    actions.clear()
+    dependsOn shadowJar
+}
