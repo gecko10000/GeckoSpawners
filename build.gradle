@@ -2,7 +2,6 @@ plugins {
     id 'java'
     id 'idea'
     id 'com.github.johnrengelman.shadow' version '7.1.0'
-    id 'io.papermc.paperweight.userdev' version '1.1.12'
 }
 
 sourceSets {
@@ -22,30 +21,25 @@ sourceCompatibility=16
 targetCompatibility=16
 
 repositories {
+    maven { url 'https://papermc.io/repo/repository/maven-public/' }
     maven { url 'https://jitpack.io' }
-    mavenLocal()
+    maven { url 'https://repo.codemc.org/repository/maven-public/' }
     mavenCentral()
 }
 
 dependencies {
-    implementation 'com.github.Redempt:RedLib:6.0.9.1'
+    compileOnly 'io.papermc.paper:paper-api:1.17.1-R0.1-SNAPSHOT'
+    implementation 'com.github.Redempt:RedLib:6.1.0.2'
     implementation 'net.kyori:adventure-text-minimessage:4.1.0-SNAPSHOT'
-    paperweightDevelopmentBundle 'io.papermc.paper:dev-bundle:1.17.1-R0.1-SNAPSHOT'
-}
-
-tasks {
-    build {
-        dependsOn(reobfJar)
-    }
+    implementation 'de.tr7zw:item-nbt-api-plugin:2.8.0'
 }
 
 shadowJar {
     relocate 'redempt.redlib', 'io.github.gecko10000.GeckoSpawners.redlib'
-    relocate 'net.kyori', 'io.github.gecko10000.GeckoSpawners.kyori'
+    relocate 'de.tr7zw', 'io.github.gecko10000.GeckoSpawners.nbtapi'
 }
 
 jar.configure {
     actions.clear()
-    dependsOn clean
     dependsOn shadowJar
 }

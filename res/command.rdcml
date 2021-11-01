@@ -1,7 +1,12 @@
-geckospawners, gs {
+geckospawners,gs {
     reload {
         permission geckospawners.reload
         hook reload
         help Reload the plugin configs
+    }
+    edit {
+        permission geckospawners.edit
+        user player
+        hook edit
     }
 }
