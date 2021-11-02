@@ -1,26 +1,28 @@
 package io.github.gecko10000.GeckoSpawners.objects;
 
 import de.tr7zw.nbtapi.*;
+import io.github.gecko10000.GeckoSpawners.util.Config;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
-import org.bukkit.inventory.ItemFactory;
 import org.bukkit.inventory.ItemStack;
 import redempt.redlib.configmanager.annotations.ConfigMappable;
 import redempt.redlib.configmanager.annotations.ConfigValue;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @ConfigMappable
 public class SpawnCandidate {
 
     @ConfigValue
-    private int weight = 0;
+    private int weight = 1;
 
     @ConfigValue
     private ItemStack displayItem = new ItemStack(Material.GLASS);
@@ -40,7 +42,10 @@ public class SpawnCandidate {
     }
 
     public SpawnCandidate set(ItemStack item) {
-        entityNBT = new NBTItem(item);
+        NBTContainer container = new NBTContainer();
+        container.setString("id", "minecraft:item");
+        container.setItemStack("Item", item);
+        entityNBT = container;
         displayItem = item;
         return this;
     }
@@ -53,16 +58,52 @@ public class SpawnCandidate {
     }
 
     public SpawnCandidate set(Entity entity) {
-        entityNBT = new NBTEntity(entity);
+        entityNBT = new NBTContainer();
+        entityNBT.setString("id", entity.getType().getKey().toString());
+        entityNBT.mergeCompound(new NBTEntity(entity));
+        Config.entityRemovedValues.forEach(entityNBT::removeKey);
         displayItem = spawnEgg(entity.getType());
         return this;
     }
 
-    public SpawnCandidate set(BlockState state) {
-        entityNBT = new NBTTileEntity(state);
-        displayItem = new ItemStack(state.getType());
+    public SpawnCandidate set(Block block) {
+        Material type = block.getType();
+        entityNBT = new NBTContainer();
+        entityNBT.setString("id", "minecraft:falling_block");
+        entityNBT.setInteger("Time", Config.fallingBlockTime);
+        NBTCompound blockState = entityNBT.getOrCreateCompound("BlockState");
+        blockState.setString("Name", type.getKey().toString());
+        NBTCompound properties = blockState.getOrCreateCompound("Properties");
+        String blockData = block.getBlockData().getAsString();
+        blockData = blockData.substring(blockData.indexOf('[') + 1, blockData.lastIndexOf(']'));
+        Arrays.stream(blockData.split(","))
+                .map(s -> s.split("="))
+                .forEach(s -> properties.setString(s[0], s[1]));
+
+        // only set tile entity properties for actual tile entities
+        if (!block.getState().getClass().getSimpleName().equals("CraftBlockState")) {
+            NBTCompound tileEntityData = entityNBT.getOrCreateCompound("TileEntityData");
+            tileEntityData.mergeCompound(new NBTTileEntity(block.getState()));
+            Config.tileEntityRemovedValues.forEach(tileEntityData::removeKey);
+        }
+        displayItem = new ItemStack(type.isItem() ? type : Material.WHITE_STAINED_GLASS);
         return this;
     }
+
+    /*
+{
+	BlockState:{
+		Name:"minecraft:shulker_box",
+		Properties:{facing:east}
+	},
+	Time:1,
+	TileEntityData:{
+		Items:[
+		{Count:1b,Slot:0b,id:grass_block}
+		]
+	}
+}
+     */
 
     public ItemStack getDisplayItem() {
         return this.displayItem;
@@ -75,9 +116,7 @@ public class SpawnCandidate {
     public NBTCompound asSpawnPotential() {
         NBTCompound potential = new NBTContainer();
         potential.setInteger("Weight", weight);
-        Bukkit.broadcast(Component.text(entityNBT.toString()));
         potential.getOrCreateCompound("Entity").mergeCompound(entityNBT);
-        Bukkit.broadcast(Component.text(potential.toString()));
         return potential;
     }
 

@@ -2,3 +2,5 @@ name: GeckoSpawners
 main: io.github.gecko10000.GeckoSpawners.GeckoSpawners
 version: 0.1
 api-version: 1.13
+depend:
+  - RedLib

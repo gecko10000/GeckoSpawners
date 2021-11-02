@@ -36,25 +36,31 @@ public class SpawnerEditor {
         addBottomBar();
         panel.addSlots(0, SIZE - 9);
         update();
+        gui.setDestroyOnClose(false);
         gui.setReturnsItems(false);
+        open(player);
+    }
+
+    public void open(Player player) {
+        update();
         gui.open(player);
     }
 
     private void addBottomBar() {
-        gui.addButton(SIZE - 9, ItemButton.create(new ItemStack(Material.NETHER_STAR), evt -> {
+        gui.addButton(SIZE - 9, ItemButton.create(plugin.makeItem(Material.RED_STAINED_GLASS_PANE, Lang.back), evt -> {
             plugin.editor.update();
             plugin.editor.open((Player) evt.getWhoClicked());
         }));
-        gui.addButton(SIZE - 7, ItemButton.create(new ItemStack(Material.RED_STAINED_GLASS_PANE), evt -> {
+        gui.addButton(SIZE - 7, ItemButton.create(plugin.makeItem(Material.RED_STAINED_GLASS_PANE, Lang.prevPage), evt -> {
             panel.prevPage();
             update();
         }));
         gui.addButton(SIZE - 5, ItemButton.create(new ItemStack(Material.GREEN_STAINED_GLASS), evt -> {
-            //TODO: spawn selection
-            update();
-            plugin.spawnerConfig.save();
+            SpawnCandidate candidate = new SpawnCandidate();
+            spawner.add(candidate);
+            enterEditMode((Player) evt.getWhoClicked(), candidate);
         }));
-        gui.addButton(SIZE - 3, ItemButton.create(new ItemStack(Material.LIME_STAINED_GLASS_PANE), evt -> {
+        gui.addButton(SIZE - 3, ItemButton.create(plugin.makeItem(Material.LIME_STAINED_GLASS_PANE, Lang.nextPage), evt -> {
             panel.nextPage();
             update();
         }));
@@ -68,8 +74,28 @@ public class SpawnerEditor {
 
     private ItemButton buttonForCandidate(SpawnCandidate candidate) {
         return ItemButton.create(candidate.getDisplayItem(), evt -> {
-            //TODO: spawn selection
+            switch (evt.getClick()) {
+                case SHIFT_LEFT:
+                case SHIFT_RIGHT:
+                    spawner.getCandidates().remove(candidate);
+                    plugin.spawnerConfig.save();
+                    update();
+                    break;
+                case RIGHT:
+                    //TODO: weight setting
+                default:
+                    enterEditMode((Player) evt.getWhoClicked(), candidate);
+            }
         });
+    }
+
+    private void enterEditMode(Player player, SpawnCandidate candidate) {
+        plugin.previousEditors.put(player, this);
+        plugin.editingCandidates.put(player, candidate);
+        update();
+        player.closeInventory();
+        plugin.makeReadable(Lang.enterEditMode).forEach(player::sendMessage);
+        plugin.spawnerConfig.save();
     }
 
     public void update() {
