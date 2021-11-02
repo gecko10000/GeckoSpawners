@@ -73,12 +73,12 @@ public class SpawnCandidate {
         entityNBT.setInteger("Time", Config.fallingBlockTime);
         NBTCompound blockState = entityNBT.getOrCreateCompound("BlockState");
         blockState.setString("Name", type.getKey().toString());
-        NBTCompound properties = blockState.getOrCreateCompound("Properties");
         String blockData = block.getBlockData().getAsString();
         int low = blockData.indexOf('[') + 1;
         int high = blockData.lastIndexOf(']');
         // only set blockdata if it exists
         if (low < high) {
+            NBTCompound properties = blockState.getOrCreateCompound("Properties");
             blockData = blockData.substring(low, high);
             Arrays.stream(blockData.split(","))
                     .map(s -> s.split("="))

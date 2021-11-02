@@ -1,22 +1,25 @@
 package io.github.gecko10000.GeckoSpawners;
 
+import com.destroystokyo.paper.event.entity.PreSpawnerSpawnEvent;
 import io.github.gecko10000.GeckoSpawners.guis.SpawnerEditor;
 import io.github.gecko10000.GeckoSpawners.objects.SpawnCandidate;
+import io.github.gecko10000.GeckoSpawners.util.Config;
 import io.github.gecko10000.GeckoSpawners.util.Lang;
 import io.papermc.paper.event.player.AsyncChatEvent;
-import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
-import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.SpawnerSpawnEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import redempt.redlib.misc.EventListener;
+import redempt.redlib.misc.LocationUtils;
 import redempt.redlib.misc.Task;
 
 public class Listeners implements Listener {
@@ -25,6 +28,16 @@ public class Listeners implements Listener {
 
     public Listeners(GeckoSpawners plugin) {
         this.plugin = plugin;
+        new EventListener<>(SpawnerSpawnEvent.class, evt -> {
+            if (!Config.centerFallingBlocks) {
+                return;
+            }
+            if (evt.getEntityType() != EntityType.FALLING_BLOCK) {
+                return;
+            }
+            evt.getEntity().teleport(evt.getLocation().toCenterLocation());
+        });
+
         new EventListener<>(PlayerQuitEvent.class, evt -> {
             Player player = evt.getPlayer();
             plugin.editingCandidates.remove(player);

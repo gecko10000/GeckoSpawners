@@ -16,4 +16,7 @@ public class Config {
     @ConfigValue("falling-block-time")
     public static int fallingBlockTime = 1;
 
+    @ConfigValue("center-falling-blocks")
+    public static boolean centerFallingBlocks = false;
+
 }
