@@ -44,6 +44,7 @@ public class SpawnerEditor {
     public void open(Player player) {
         update();
         gui.open(player);
+        plugin.spawnerConfig.save();
     }
 
     private void addBottomBar() {

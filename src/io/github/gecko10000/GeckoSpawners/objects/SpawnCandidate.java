@@ -75,10 +75,15 @@ public class SpawnCandidate {
         blockState.setString("Name", type.getKey().toString());
         NBTCompound properties = blockState.getOrCreateCompound("Properties");
         String blockData = block.getBlockData().getAsString();
-        blockData = blockData.substring(blockData.indexOf('[') + 1, blockData.lastIndexOf(']'));
-        Arrays.stream(blockData.split(","))
-                .map(s -> s.split("="))
-                .forEach(s -> properties.setString(s[0], s[1]));
+        int low = blockData.indexOf('[') + 1;
+        int high = blockData.lastIndexOf(']');
+        // only set blockdata if it exists
+        if (low < high) {
+            blockData = blockData.substring(low, high);
+            Arrays.stream(blockData.split(","))
+                    .map(s -> s.split("="))
+                    .forEach(s -> properties.setString(s[0], s[1]));
+        }
 
         // only set tile entity properties for actual tile entities
         if (!block.getState().getClass().getSimpleName().equals("CraftBlockState")) {

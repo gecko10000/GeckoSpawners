@@ -43,6 +43,10 @@ public class GeckoSpawners extends JavaPlugin {
         editor = new MainEditor(this);
     }
 
+    public void onDisable() {
+        spawnerConfig.save();
+    }
+
     public void reload() {
         new ConfigManager(this)
                 .register(Config.class).saveDefaults().load();

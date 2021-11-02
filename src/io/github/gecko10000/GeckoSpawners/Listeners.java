@@ -1,6 +1,8 @@
 package io.github.gecko10000.GeckoSpawners;
 
 import io.github.gecko10000.GeckoSpawners.guis.SpawnerEditor;
+import io.github.gecko10000.GeckoSpawners.objects.SpawnCandidate;
+import io.github.gecko10000.GeckoSpawners.util.Lang;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
@@ -36,9 +38,7 @@ public class Listeners implements Listener {
                 return;
             }
             evt.setCancelled(true);
-            plugin.editingCandidates.remove(player).set(evt.getItemDrop().getItemStack());
-            plugin.spawnerConfig.save();
-            editor.open(player);
+            finishEditing(player, editor).set(evt.getItemDrop().getItemStack());
         });
 
         new EventListener<>(EntityDamageByEntityEvent.class, evt -> {
@@ -50,9 +50,7 @@ public class Listeners implements Listener {
                 return;
             }
             evt.setCancelled(true);
-            plugin.editingCandidates.remove(player).set(evt.getEntityType());
-            plugin.spawnerConfig.save();
-            editor.open(player);
+            finishEditing(player, editor).set(evt.getEntityType());
         });
 
         new EventListener<>(PlayerInteractAtEntityEvent.class, evt -> {
@@ -62,9 +60,7 @@ public class Listeners implements Listener {
                 return;
             }
             evt.setCancelled(true);
-            plugin.editingCandidates.remove(player).set(evt.getRightClicked());
-            plugin.spawnerConfig.save();
-            editor.open(player);
+            finishEditing(player, editor).set(evt.getRightClicked());
         });
 
         new EventListener<>(PlayerInteractEvent.class, evt -> {
@@ -79,9 +75,7 @@ public class Listeners implements Listener {
                 return;
             }
             evt.setCancelled(true);
-            plugin.editingCandidates.remove(player).set(block);
-            plugin.spawnerConfig.save();
-            editor.open(player);
+            finishEditing(player, editor).set(block);
         });
 
         new EventListener<>(AsyncChatEvent.class, evt -> {
@@ -91,12 +85,33 @@ public class Listeners implements Listener {
                 return;
             }
             evt.setCancelled(true);
-            if (PlainTextComponentSerializer.plainText().serialize(evt.message()).equals("exit")) {
+            String message = PlainTextComponentSerializer.plainText().serialize(evt.message());
+            if (message.equals("exit")) {
                 plugin.previousEditors.remove(player);
-                plugin.editingCandidates.remove(player);
-                Task.syncDelayed(() -> editor.open(player));
+                finishEditing(player, editor);
+                return;
             }
+            Integer numInput = parseInt(message);
+            if (numInput == null || numInput <= 0) {
+                player.sendMessage(plugin.makeReadable(Lang.enterValidInput));
+                return;
+            }
+            plugin.previousEditors.remove(player);
+            finishEditing(player, editor).setWeight(numInput);
         });
+    }
+
+    private SpawnCandidate finishEditing(Player player, SpawnerEditor editor) {
+        Task.syncDelayed(() -> editor.open(player));
+        return plugin.editingCandidates.remove(player);
+    }
+
+    private Integer parseInt(String str) {
+        try {
+            return Integer.parseInt(str);
+        } catch (NumberFormatException ex) {
+            return null;
+        }
     }
 
 }

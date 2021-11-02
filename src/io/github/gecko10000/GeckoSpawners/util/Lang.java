@@ -23,13 +23,17 @@ public class Lang {
 
     @ConfigValue("enter-edit-mode")
     public static List<String> enterEditMode = Arrays.asList(
-            "<green>Drop <dark_green>an item to add it.",
-            "<green>Left click <dark_green>a mob to add its base type.",
-            "<green>Right click <dark_green>a mob to add the exact mob.",
-            "<green>Left click <dark_green>a block to add it.",
-            "<green>Say <dark_green>\"exit\" to leave edit mode."
+            "<green>Drop an item <dark_green>to set the option to it.",
+            "<green>Left click a mob <dark_green>to set the option to its base type.",
+            "<green>Right click a mob <dark_green>to set the option to the exact mob.",
+            "<green>Left click a block <dark_green>to set the option to it.",
+            "<green>Enter a number <dark_green>to set the option's weight.",
+            "<green>Say \"exit\" <dark_green>to leave edit mode."
     );
+
     @ConfigValue("error.hold-something")
     public static String holdSomething = "<red>Hold an item in your hand!";
+    @ConfigValue("error.enter-valid-input")
+    public static String enterValidInput = "<red>Please enter \"exit\" or a number.";
 
 }
