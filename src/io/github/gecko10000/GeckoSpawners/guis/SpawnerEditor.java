@@ -33,7 +33,7 @@ public class SpawnerEditor {
         this.player = player;
         this.spawner = spawner;
 
-        this.gui = new InventoryGUI(Bukkit.createInventory(null, SIZE, plugin.makeReadable(Lang.guiSpawnerTitle
+        this.gui = new InventoryGUI(Bukkit.createInventory(null, SIZE, GeckoSpawners.makeReadable(Lang.guiSpawnerTitle
                 .replace("%name%", spawner.id))));
         this.panel = new PaginationPanel(gui);
         addBottomBar();
@@ -50,11 +50,11 @@ public class SpawnerEditor {
     }
 
     private void addBottomBar() {
-        gui.addButton(SIZE - 9, ItemButton.create(plugin.makeItem(Material.RED_STAINED_GLASS_PANE, Lang.back), evt -> {
+        gui.addButton(SIZE - 9, ItemButton.create(plugin.backItem(), evt -> {
             plugin.editor.update();
             plugin.editor.open((Player) evt.getWhoClicked());
         }));
-        gui.addButton(SIZE - 7, ItemButton.create(plugin.makeItem(Material.RED_STAINED_GLASS_PANE, Lang.prevPage), evt -> {
+        gui.addButton(SIZE - 7, ItemButton.create(plugin.pageItem(true), evt -> {
             panel.prevPage();
             update();
         }));
@@ -65,7 +65,7 @@ public class SpawnerEditor {
             spawner.add(candidate);
             enterEditMode((Player) evt.getWhoClicked(), candidate);
         }));
-        gui.addButton(SIZE - 3, ItemButton.create(plugin.makeItem(Material.LIME_STAINED_GLASS_PANE, Lang.nextPage), evt -> {
+        gui.addButton(SIZE - 3, ItemButton.create(plugin.pageItem(false), evt -> {
             panel.nextPage();
             update();
         }));
@@ -93,14 +93,12 @@ public class SpawnerEditor {
     private ItemButton buttonForCandidate(SpawnCandidate candidate) {
         return ItemButton.create(candidate.getDisplayItem(), evt -> {
             switch (evt.getClick()) {
-                case SHIFT_LEFT:
-                case SHIFT_RIGHT:
+                case SHIFT_LEFT, SHIFT_RIGHT -> {
                     spawner.remove(candidate);
                     plugin.spawnerConfig.save();
                     update();
-                    break;
-                default:
-                    enterEditMode((Player) evt.getWhoClicked(), candidate);
+                }
+                default -> enterEditMode((Player) evt.getWhoClicked(), candidate);
             }
         });
     }
@@ -111,9 +109,9 @@ public class SpawnerEditor {
         update();
         player.closeInventory();
         if (candidate != null) {
-            plugin.makeReadable(Lang.enterEditMode).forEach(player::sendMessage);
+            GeckoSpawners.makeReadable(Lang.enterEditMode).forEach(player::sendMessage);
         } else {
-            player.sendMessage(plugin.makeReadable(Lang.enterNamingMode.replace("%name%", this.spawner.id)));
+            player.sendMessage(GeckoSpawners.makeReadable(Lang.enterNamingMode.replace("%name%", this.spawner.id)));
         }
         plugin.spawnerConfig.save();
     }

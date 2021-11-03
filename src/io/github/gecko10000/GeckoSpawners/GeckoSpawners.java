@@ -9,6 +9,7 @@ import io.github.gecko10000.GeckoSpawners.objects.SpawnerObject;
 import io.github.gecko10000.GeckoSpawners.util.Config;
 import io.github.gecko10000.GeckoSpawners.util.Lang;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Material;
@@ -53,6 +54,26 @@ public class GeckoSpawners extends JavaPlugin {
                 .addConverter(NBTCompound.class, NBTContainer::new, NBTCompound::toString)
                 .register(this).saveDefaults().load();
         editor = new MainEditor(this);
+    }
+
+    public ItemStack pageItem(boolean prev) {
+        ItemStack item = new ItemStack(prev ? Material.RED_STAINED_GLASS_PANE : Material.LIME_STAINED_GLASS_PANE);
+        ItemMeta meta = item.getItemMeta();
+        meta.displayName(Component.translatable("createWorld.customize.custom." + (prev ? "prev" : "next"))
+                .decoration(TextDecoration.ITALIC, false)
+                .color(prev ? NamedTextColor.RED : NamedTextColor.GREEN));
+        item.setItemMeta(meta);
+        return item;
+    }
+
+    public ItemStack backItem() {
+        ItemStack item = new ItemStack(Material.RED_STAINED_GLASS_PANE);
+        ItemMeta meta = item.getItemMeta();
+        meta.displayName(Component.translatable("gui.back")
+                .decoration(TextDecoration.ITALIC, false)
+                .color(NamedTextColor.RED));
+        item.setItemMeta(meta);
+        return item;
     }
 
     public ItemStack makeItem(Material material, String name) {

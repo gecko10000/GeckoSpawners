@@ -25,16 +25,10 @@ public class Lang {
     );
     @ConfigValue("gui.spawner.title")
     public static String guiSpawnerTitle = "<#059142>%name%";
-    @ConfigValue("gui.spawner.back")
-    public static String back = "<red>Back";
     @ConfigValue("gui.spawner.rename")
     public static String renameSpawner = "<#059142>Rename Spawner";
     @ConfigValue("gui.spawner.create")
     public static String guiSpawnerCreateCandidate = "<#059142>Create Spawn Candidate";
-    @ConfigValue("gui.page.prev")
-    public static String prevPage = "<red>Previous Page";
-    @ConfigValue("gui.page.next")
-    public static String nextPage = "<green>Next Page";
 
     @ConfigValue("reload-success")
     public static String reloadSuccess = "<green>Configs reloaded!";

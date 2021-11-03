@@ -27,7 +27,7 @@ public class MainEditor {
 
     public MainEditor(GeckoSpawners plugin) {
         this.plugin = plugin;
-        this.gui = new InventoryGUI(Bukkit.createInventory(null, SIZE, plugin.makeReadable(Lang.guiMainTitle)));
+        this.gui = new InventoryGUI(Bukkit.createInventory(null, SIZE, GeckoSpawners.makeReadable(Lang.guiMainTitle)));
         this.panel = new PaginationPanel(gui);
         addBottomBar();
         panel.addSlots(0, SIZE - 9);
@@ -42,7 +42,7 @@ public class MainEditor {
     }
 
     private void addBottomBar() {
-        gui.addButton(SIZE - 3, ItemButton.create(plugin.makeItem(Material.LIME_STAINED_GLASS_PANE, Lang.nextPage), evt -> {
+        gui.addButton(SIZE - 3, ItemButton.create(plugin.pageItem(true), evt -> {
             panel.nextPage();
             update();
         }));
@@ -56,7 +56,7 @@ public class MainEditor {
             new SpawnerEditor(plugin, (Player) evt.getWhoClicked(), spawner);
             update();
         }));
-        gui.addButton(SIZE - 7, ItemButton.create(plugin.makeItem(Material.RED_STAINED_GLASS_PANE, Lang.prevPage), evt -> {
+        gui.addButton(SIZE - 7, ItemButton.create(plugin.pageItem(false), evt -> {
             panel.prevPage();
             update();
         }));
@@ -72,17 +72,13 @@ public class MainEditor {
         return ItemButton.create(spawner.getDisplayItem(), evt -> {
             Player player = (Player) evt.getWhoClicked();
             switch (evt.getClick()) {
-                case SHIFT_RIGHT:
-                case SHIFT_LEFT:
+                case SHIFT_RIGHT, SHIFT_LEFT -> {
                     plugin.spawnerObjects.remove(spawner.id);
                     plugin.spawnerConfig.save();
                     update();
-                    break;
-                case MIDDLE:
-                    ItemUtils.give(player, spawner.getSpawner());
-                    break;
-                default:
-                    new SpawnerEditor(plugin, player, spawner);
+                }
+                case MIDDLE -> ItemUtils.give(player, spawner.getSpawner());
+                default -> new SpawnerEditor(plugin, player, spawner);
             }
         });
     }
