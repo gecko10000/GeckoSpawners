@@ -1,6 +1,5 @@
 package io.github.gecko10000.GeckoSpawners;
 
-import com.destroystokyo.paper.event.entity.PreSpawnerSpawnEvent;
 import io.github.gecko10000.GeckoSpawners.guis.SpawnerEditor;
 import io.github.gecko10000.GeckoSpawners.objects.SpawnCandidate;
 import io.github.gecko10000.GeckoSpawners.util.Config;
@@ -19,7 +18,6 @@ import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import redempt.redlib.misc.EventListener;
-import redempt.redlib.misc.LocationUtils;
 import redempt.redlib.misc.Task;
 
 public class Listeners implements Listener {
@@ -46,6 +44,9 @@ public class Listeners implements Listener {
 
         new EventListener<>(PlayerDropItemEvent.class, evt -> {
             Player player = evt.getPlayer();
+            if (plugin.editingCandidates.get(player) == null) {
+                return;
+            }
             SpawnerEditor editor = plugin.previousEditors.remove(player);
             if (editor == null) {
                 return;
@@ -58,6 +59,9 @@ public class Listeners implements Listener {
             if (!(evt.getDamager() instanceof Player player)) {
                 return;
             }
+            if (plugin.editingCandidates.get(player) == null) {
+                return;
+            }
             SpawnerEditor editor = plugin.previousEditors.remove(player);
             if (editor == null) {
                 return;
@@ -68,6 +72,9 @@ public class Listeners implements Listener {
 
         new EventListener<>(PlayerInteractAtEntityEvent.class, evt -> {
             Player player = evt.getPlayer();
+            if (plugin.editingCandidates.get(player) == null) {
+                return;
+            }
             SpawnerEditor editor = plugin.previousEditors.remove(player);
             if (editor == null) {
                 return;
@@ -83,6 +90,9 @@ public class Listeners implements Listener {
                 return;
             }
             Player player = evt.getPlayer();
+            if (plugin.editingCandidates.get(player) == null) {
+                return;
+            }
             SpawnerEditor editor = plugin.previousEditors.remove(player);
             if (editor == null) {
                 return;
@@ -99,6 +109,16 @@ public class Listeners implements Listener {
             }
             evt.setCancelled(true);
             String message = PlainTextComponentSerializer.plainText().serialize(evt.message());
+            if (editor.settingName != null && !editor.settingName.isDone()) {
+                if (plugin.spawnerObjects.keySet().contains(message) && !message.equals(editor.getSpawner().id)) {
+                    player.sendMessage(plugin.makeReadable(Lang.spawnerNameExists));
+                    return;
+                }
+                Task.syncDelayed(() -> editor.settingName.complete(message), 2);
+                plugin.previousEditors.remove(player);
+                finishEditing(player, editor);
+                return;
+            }
             if (message.equals("exit")) {
                 plugin.previousEditors.remove(player);
                 finishEditing(player, editor);
@@ -116,7 +136,7 @@ public class Listeners implements Listener {
     }
 
     private SpawnCandidate finishEditing(Player player, SpawnerEditor editor) {
-        Task.syncDelayed(() -> editor.open(player));
+        Task.syncDelayed(() -> editor.open());
         return plugin.editingCandidates.remove(player);
     }
 

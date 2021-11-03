@@ -1,6 +1,5 @@
 package io.github.gecko10000.GeckoSpawners;
 
-import io.github.gecko10000.GeckoSpawners.guis.MainEditor;
 import io.github.gecko10000.GeckoSpawners.util.Lang;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;

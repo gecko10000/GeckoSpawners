@@ -4,12 +4,9 @@ import de.tr7zw.nbtapi.NBTCompound;
 import de.tr7zw.nbtapi.NBTCompoundList;
 import de.tr7zw.nbtapi.NBTItem;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import redempt.redlib.configmanager.ConfigManager;
@@ -70,10 +67,9 @@ public class SpawnerObject {
                 .decoration(TextDecoration.ITALIC, false)
                 .color(TextColor.fromHexString("#08f26e")));
         meta.lore(spawnCandidates.stream()
-                .map(SpawnCandidate::getDisplayItem)
-                .map(ItemStack::getItemMeta)
-                .map(ItemMeta::displayName)
-                .map(c -> c.color(TextColor.fromHexString("#06a94d")))
+                .map(sc -> sc.getDisplayItem().getItemMeta().displayName()
+                        .append(Component.text(" - " + sc.getWeight()))
+                        .color(TextColor.fromHexString("#06a94d")))
                 .collect(Collectors.toList()));
         spawner.setItemMeta(meta);
         return spawner;

@@ -6,18 +6,22 @@ import io.github.gecko10000.GeckoSpawners.objects.SpawnerObject;
 import io.github.gecko10000.GeckoSpawners.util.Lang;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ItemFlag;
 import redempt.redlib.inventorygui.InventoryGUI;
 import redempt.redlib.inventorygui.ItemButton;
 import redempt.redlib.inventorygui.PaginationPanel;
+import redempt.redlib.itemutils.ItemBuilder;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 public class SpawnerEditor {
 
     private final GeckoSpawners plugin;
+    private final Player player;
     private final SpawnerObject spawner;
 
     private final InventoryGUI gui;
@@ -26,18 +30,20 @@ public class SpawnerEditor {
 
     public SpawnerEditor(GeckoSpawners plugin, Player player, SpawnerObject spawner) {
         this.plugin = plugin;
+        this.player = player;
         this.spawner = spawner;
 
-        this.gui = new InventoryGUI(Bukkit.createInventory(null, SIZE, plugin.makeReadable(Lang.guiSpawnerTitle)));
+        this.gui = new InventoryGUI(Bukkit.createInventory(null, SIZE, plugin.makeReadable(Lang.guiSpawnerTitle
+                .replace("%name%", spawner.id))));
         this.panel = new PaginationPanel(gui);
         addBottomBar();
         panel.addSlots(0, SIZE - 9);
         gui.setDestroyOnClose(false);
         gui.setReturnsItems(false);
-        open(player);
+        open();
     }
 
-    public void open(Player player) {
+    public void open() {
         update();
         gui.open(player);
         plugin.spawnerConfig.save();
@@ -52,7 +58,9 @@ public class SpawnerEditor {
             panel.prevPage();
             update();
         }));
-        gui.addButton(SIZE - 5, ItemButton.create(new ItemStack(Material.GREEN_STAINED_GLASS), evt -> {
+        gui.addButton(SIZE - 5, ItemButton.create(new ItemBuilder(plugin.makeItem(Material.GREEN_STAINED_GLASS, Lang.guiSpawnerCreateCandidate))
+                .addEnchant(Enchantment.DURABILITY, 1)
+                .addItemFlags(ItemFlag.HIDE_ENCHANTS), evt -> {
             SpawnCandidate candidate = new SpawnCandidate();
             spawner.add(candidate);
             enterEditMode((Player) evt.getWhoClicked(), candidate);
@@ -62,9 +70,19 @@ public class SpawnerEditor {
             update();
         }));
         gui.addButton(SIZE - 1, ItemButton.create(plugin.makeItem(Material.NAME_TAG, Lang.renameSpawner), evt -> {
-            // TODO:rename spawner
+            settingName = new CompletableFuture<>();
+            enterEditMode((Player) evt.getWhoClicked(), null);
+            settingName.thenAccept(name -> {
+                SpawnerObject temp = plugin.spawnerObjects.remove(this.spawner.id);
+                this.spawner.id = name;
+                plugin.spawnerObjects.put(name, temp);
+                plugin.spawnerConfig.save();
+                new SpawnerEditor(plugin, player, spawner);
+            });
         }));
     }
+
+    public CompletableFuture<String> settingName;
 
     private List<ItemButton> candidateButtons() {
         return spawner.getCandidates().stream()
@@ -92,7 +110,11 @@ public class SpawnerEditor {
         plugin.editingCandidates.put(player, candidate);
         update();
         player.closeInventory();
-        plugin.makeReadable(Lang.enterEditMode).forEach(player::sendMessage);
+        if (candidate != null) {
+            plugin.makeReadable(Lang.enterEditMode).forEach(player::sendMessage);
+        } else {
+            player.sendMessage(plugin.makeReadable(Lang.enterNamingMode.replace("%name%", this.spawner.id)));
+        }
         plugin.spawnerConfig.save();
     }
 

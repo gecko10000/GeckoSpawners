@@ -1,14 +1,13 @@
 package io.github.gecko10000.GeckoSpawners.guis;
 
 import io.github.gecko10000.GeckoSpawners.GeckoSpawners;
-import io.github.gecko10000.GeckoSpawners.objects.SpawnCandidate;
 import io.github.gecko10000.GeckoSpawners.objects.SpawnerObject;
 import io.github.gecko10000.GeckoSpawners.util.Lang;
-import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ItemFlag;
 import redempt.redlib.inventorygui.InventoryGUI;
 import redempt.redlib.inventorygui.ItemButton;
 import redempt.redlib.inventorygui.PaginationPanel;
@@ -47,7 +46,9 @@ public class MainEditor {
             panel.nextPage();
             update();
         }));
-        gui.addButton(SIZE - 5, ItemButton.create(new ItemBuilder(Material.SPAWNER), evt -> {
+        gui.addButton(SIZE - 5, ItemButton.create(new ItemBuilder(plugin.makeItem(Material.SPAWNER, Lang.guiMainCreate))
+                .addEnchant(Enchantment.DURABILITY, 1)
+                .addItemFlags(ItemFlag.HIDE_ENCHANTS), evt -> {
             SpawnerObject spawner = new SpawnerObject();
             panel.setPage(panel.getMaxPage());
             plugin.spawnerObjects.put(spawner.id, spawner);

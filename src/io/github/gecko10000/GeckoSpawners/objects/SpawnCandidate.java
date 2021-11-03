@@ -1,6 +1,9 @@
 package io.github.gecko10000.GeckoSpawners.objects;
 
-import de.tr7zw.nbtapi.*;
+import de.tr7zw.nbtapi.NBTCompound;
+import de.tr7zw.nbtapi.NBTContainer;
+import de.tr7zw.nbtapi.NBTEntity;
+import de.tr7zw.nbtapi.NBTTileEntity;
 import io.github.gecko10000.GeckoSpawners.util.Config;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
@@ -8,17 +11,19 @@ import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import redempt.redlib.configmanager.annotations.ConfigMappable;
 import redempt.redlib.configmanager.annotations.ConfigValue;
-import redempt.redlib.itemutils.ItemBuilder;
 import redempt.redlib.misc.FormatUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @ConfigMappable
 public class SpawnCandidate {
@@ -103,14 +108,19 @@ public class SpawnCandidate {
     public ItemStack getDisplayItem() {
         ItemStack displayCopy = displayItem.clone();
         ItemMeta displayMeta = displayCopy.getItemMeta();
+        Component displayName;
+        List<Component> lore = new ArrayList<>();
+        lore.add(Component.text("Weight: " + weight)
+                .color(TextColor.fromHexString("#059142"))
+                .decoration(TextDecoration.ITALIC, false));
         if (entityNBT == null) {
-            displayMeta.displayName(Component.text("None")
+            displayName = Component.text("None")
                     .decoration(TextDecoration.ITALIC, false)
-                    .color(TextColor.fromHexString("#08f26e")));
+                    .color(TextColor.fromHexString("#08f26e"));
         } else {
             String name = getKey(entityNBT.getString("id"));
             name = FormatUtils.toTitleCase(name.replace('_', ' '));
-            Component displayName = Component.text(name)
+            displayName = Component.text(name)
                     .decoration(TextDecoration.ITALIC, false)
                     .color(TextColor.fromHexString("#08f26e"));
             switch (name) {
@@ -126,8 +136,17 @@ public class SpawnCandidate {
                             .append(Component.text(blockName));
                 }
             }
-            displayMeta.displayName(displayName);
+            if (Config.showNbtInCandidateLore) {
+                lore.addAll(
+                        Arrays.stream(entityNBT.toString().split("(?<=\\G.{20})"))
+                                .map(Component::text)
+                                .map(c -> c.color(TextColor.fromHexString("#059142")))
+                                .map(c -> c.decoration(TextDecoration.ITALIC, false))
+                                .collect(Collectors.toList()));
+            }
         }
+        displayMeta.displayName(displayName);
+        displayMeta.lore(lore);
         displayCopy.setItemMeta(displayMeta);
         return displayCopy;
     }
