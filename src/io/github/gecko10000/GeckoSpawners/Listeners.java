@@ -110,7 +110,8 @@ public class Listeners implements Listener {
                 return;
             }
             plugin.previousEditors.remove(player);
-            finishEditing(player, editor).setWeight(numInput);
+            SpawnCandidate candidate = finishEditing(player, editor).setWeight(numInput);
+            editor.getSpawner().remove(candidate).add(candidate);
         });
     }
 

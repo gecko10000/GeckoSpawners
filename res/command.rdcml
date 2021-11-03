@@ -7,6 +7,7 @@ geckospawners,gs {
     edit,e {
         permission geckospawners.edit
         user player
+        help Create, edit, and remove custom spawners
         hook edit
     }
 }

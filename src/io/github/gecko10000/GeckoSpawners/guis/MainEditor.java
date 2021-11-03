@@ -50,7 +50,7 @@ public class MainEditor {
         gui.addButton(SIZE - 5, ItemButton.create(new ItemBuilder(Material.SPAWNER), evt -> {
             SpawnerObject spawner = new SpawnerObject();
             panel.setPage(panel.getMaxPage());
-            plugin.spawnerObjects.add(spawner);
+            plugin.spawnerObjects.put(spawner.id, spawner);
             plugin.spawnerConfig.save();
             new SpawnerEditor(plugin, (Player) evt.getWhoClicked(), spawner);
             update();
@@ -62,19 +62,18 @@ public class MainEditor {
     }
 
     private List<ItemButton> spawnerButtons() {
-        return plugin.spawnerObjects.stream()
+        return plugin.spawnerObjects.values().stream()
                 .map(this::buttonForSpawner)
                 .collect(Collectors.toList());
     }
 
     private ItemButton buttonForSpawner(SpawnerObject spawner) {
-        List<ItemStack> displayItems = spawner.getDisplayItems();
-        return ItemButton.create(displayItems.size() == 0 ? new ItemStack(Material.GLASS) : displayItems.get(0), evt -> {
+        return ItemButton.create(spawner.getDisplayItem(), evt -> {
             Player player = (Player) evt.getWhoClicked();
             switch (evt.getClick()) {
                 case SHIFT_RIGHT:
                 case SHIFT_LEFT:
-                    plugin.spawnerObjects.remove(spawner);
+                    plugin.spawnerObjects.remove(spawner.id);
                     plugin.spawnerConfig.save();
                     update();
                     break;

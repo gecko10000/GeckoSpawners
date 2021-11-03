@@ -29,7 +29,7 @@ public class GeckoSpawners extends JavaPlugin {
 
     public ConfigManager spawnerConfig;
     @ConfigValue("spawners")
-    public List<SpawnerObject> spawnerObjects = ConfigManager.list(SpawnerObject.class);
+    public Map<String, SpawnerObject> spawnerObjects = ConfigManager.map(String.class, SpawnerObject.class);
 
     public Map<Player, SpawnCandidate> editingCandidates = new HashMap<>();
     public Map<Player, SpawnerEditor> previousEditors = new HashMap<>();

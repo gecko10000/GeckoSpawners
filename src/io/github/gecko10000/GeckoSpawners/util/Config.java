@@ -19,4 +19,7 @@ public class Config {
     @ConfigValue("center-falling-blocks")
     public static boolean centerFallingBlocks = false;
 
+    @ConfigValue("default-falling-blocks-dont-drop-items")
+    public static boolean defaultFallingBlocksDontDropItems = false;
+
 }

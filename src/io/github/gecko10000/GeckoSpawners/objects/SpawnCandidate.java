@@ -3,6 +3,8 @@ package io.github.gecko10000.GeckoSpawners.objects;
 import de.tr7zw.nbtapi.*;
 import io.github.gecko10000.GeckoSpawners.util.Config;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -10,13 +12,13 @@ import org.bukkit.block.BlockState;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import redempt.redlib.configmanager.annotations.ConfigMappable;
 import redempt.redlib.configmanager.annotations.ConfigValue;
+import redempt.redlib.itemutils.ItemBuilder;
+import redempt.redlib.misc.FormatUtils;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @ConfigMappable
 public class SpawnCandidate {
@@ -71,6 +73,9 @@ public class SpawnCandidate {
         entityNBT = new NBTContainer();
         entityNBT.setString("id", "minecraft:falling_block");
         entityNBT.setInteger("Time", Config.fallingBlockTime);
+        if (Config.defaultFallingBlocksDontDropItems) {
+            entityNBT.setByte("DropItem", (byte) 0);
+        }
         NBTCompound blockState = entityNBT.getOrCreateCompound("BlockState");
         blockState.setString("Name", type.getKey().toString());
         String blockData = block.getBlockData().getAsString();
@@ -95,23 +100,41 @@ public class SpawnCandidate {
         return this;
     }
 
-    /*
-{
-	BlockState:{
-		Name:"minecraft:shulker_box",
-		Properties:{facing:east}
-	},
-	Time:1,
-	TileEntityData:{
-		Items:[
-		{Count:1b,Slot:0b,id:grass_block}
-		]
-	}
-}
-     */
-
     public ItemStack getDisplayItem() {
-        return this.displayItem;
+        ItemStack displayCopy = displayItem.clone();
+        ItemMeta displayMeta = displayCopy.getItemMeta();
+        if (entityNBT == null) {
+            displayMeta.displayName(Component.text("None")
+                    .decoration(TextDecoration.ITALIC, false)
+                    .color(TextColor.fromHexString("#08f26e")));
+        } else {
+            String name = getKey(entityNBT.getString("id"));
+            name = FormatUtils.toTitleCase(name.replace('_', ' '));
+            Component displayName = Component.text(name)
+                    .decoration(TextDecoration.ITALIC, false)
+                    .color(TextColor.fromHexString("#08f26e"));
+            switch (name) {
+                case "Item" -> displayName = displayName.append(Component.text(": "))
+                        .append(Optional.ofNullable(displayMeta.displayName())
+                                .orElse(Component.translatable(displayCopy.translationKey()))
+                        );
+                case "Falling Block" -> {
+                    String blockName = getKey(entityNBT.getCompound("BlockState")
+                            .getString("Name"));
+                    blockName = FormatUtils.toTitleCase(blockName.replace('_', ' '));
+                    displayName = displayName.append(Component.text(": "))
+                            .append(Component.text(blockName));
+                }
+            }
+            displayMeta.displayName(displayName);
+        }
+        displayCopy.setItemMeta(displayMeta);
+        return displayCopy;
+    }
+
+    private String getKey(String namespaced) {
+        String[] split = namespaced.split(":");
+        return split[split.length - 1];
     }
 
     public NBTCompound asCompound() {
@@ -119,6 +142,9 @@ public class SpawnCandidate {
     }
 
     public NBTCompound asSpawnPotential() {
+        if (entityNBT == null) {
+            return null;
+        }
         NBTCompound potential = new NBTContainer();
         potential.setInteger("Weight", weight);
         potential.getOrCreateCompound("Entity").mergeCompound(entityNBT);

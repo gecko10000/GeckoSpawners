@@ -8,11 +8,13 @@ import java.util.List;
 public class Lang {
 
     @ConfigValue("gui.main.title")
-    public static String guiMainTitle = "<dark_purple>Edit Spawners";
+    public static String guiMainTitle = "<#059142>Edit Spawners";
     @ConfigValue("gui.spawner.title")
-    public static String guiSpawnerTitle = "<dark_purple>Configure spawn candidates";
+    public static String guiSpawnerTitle = "<#059142>Configure spawn candidates";
     @ConfigValue("gui.spawner.back")
     public static String back = "<red>Back";
+    @ConfigValue("gui.spawner.rename")
+    public static String renameSpawner = "<#059142>Rename Spawner";
     @ConfigValue("gui.page.prev")
     public static String prevPage = "<red>Previous Page";
     @ConfigValue("gui.page.next")

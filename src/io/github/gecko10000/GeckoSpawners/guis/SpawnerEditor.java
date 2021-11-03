@@ -6,15 +6,12 @@ import io.github.gecko10000.GeckoSpawners.objects.SpawnerObject;
 import io.github.gecko10000.GeckoSpawners.util.Lang;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import redempt.redlib.inventorygui.InventoryGUI;
 import redempt.redlib.inventorygui.ItemButton;
 import redempt.redlib.inventorygui.PaginationPanel;
 
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,7 +32,6 @@ public class SpawnerEditor {
         this.panel = new PaginationPanel(gui);
         addBottomBar();
         panel.addSlots(0, SIZE - 9);
-        update();
         gui.setDestroyOnClose(false);
         gui.setReturnsItems(false);
         open(player);
@@ -65,6 +61,9 @@ public class SpawnerEditor {
             panel.nextPage();
             update();
         }));
+        gui.addButton(SIZE - 1, ItemButton.create(plugin.makeItem(Material.NAME_TAG, Lang.renameSpawner), evt -> {
+            // TODO:rename spawner
+        }));
     }
 
     private List<ItemButton> candidateButtons() {
@@ -78,12 +77,10 @@ public class SpawnerEditor {
             switch (evt.getClick()) {
                 case SHIFT_LEFT:
                 case SHIFT_RIGHT:
-                    spawner.getCandidates().remove(candidate);
+                    spawner.remove(candidate);
                     plugin.spawnerConfig.save();
                     update();
                     break;
-                case RIGHT:
-                    //TODO: weight setting
                 default:
                     enterEditMode((Player) evt.getWhoClicked(), candidate);
             }
@@ -97,6 +94,10 @@ public class SpawnerEditor {
         player.closeInventory();
         plugin.makeReadable(Lang.enterEditMode).forEach(player::sendMessage);
         plugin.spawnerConfig.save();
+    }
+
+    public SpawnerObject getSpawner() {
+        return spawner;
     }
 
     public void update() {
