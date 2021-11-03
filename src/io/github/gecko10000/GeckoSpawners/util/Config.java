@@ -22,7 +22,4 @@ public class Config {
     @ConfigValue("default-falling-blocks-dont-drop-items")
     public static boolean defaultFallingBlocksDontDropItems = false;
 
-    @ConfigValue("show-nbt-in-candidate-lore")
-    public static boolean showNbtInCandidateLore = false;
-
 }

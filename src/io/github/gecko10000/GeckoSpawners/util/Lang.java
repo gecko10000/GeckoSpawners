@@ -11,6 +11,18 @@ public class Lang {
     public static String guiMainTitle = "<#059142>Edit Spawners";
     @ConfigValue("gui.main.create")
     public static String guiMainCreate = "<#059142>Create New Spawner";
+    @ConfigValue("gui.main.edit-instructions")
+    public static List<String> spawnerEditInstructions = Arrays.asList(
+            "<red>Click to edit",
+            "<red>Middle click to get",
+            "<red>Shift+click to delete"
+    );
+
+    @ConfigValue("gui.spawner.edit-instructions")
+    public static List<String> candidateEditInstructions = Arrays.asList(
+            "<red>Click to edit",
+            "<red>Shift+click to delete"
+    );
     @ConfigValue("gui.spawner.title")
     public static String guiSpawnerTitle = "<#059142>%name%";
     @ConfigValue("gui.spawner.back")

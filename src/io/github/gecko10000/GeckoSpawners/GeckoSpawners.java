@@ -19,10 +19,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import redempt.redlib.configmanager.ConfigManager;
 import redempt.redlib.configmanager.annotations.ConfigValue;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class GeckoSpawners extends JavaPlugin {
@@ -67,7 +64,7 @@ public class GeckoSpawners extends JavaPlugin {
         ItemMeta meta = item.getItemMeta();
         meta.displayName(makeReadable(name).decoration(TextDecoration.ITALIC, false));
         meta.lore(lore.stream()
-                .map(this::makeReadable)
+                .map(GeckoSpawners::makeReadable)
                 .map(c -> c.decoration(TextDecoration.ITALIC, false))
                 .collect(Collectors.toList())
         );
@@ -75,11 +72,11 @@ public class GeckoSpawners extends JavaPlugin {
         return item;
     }
 
-    public List<Component> makeReadable(List<String> input) {
-        return input.stream().map(this::makeReadable).collect(Collectors.toList());
+    public static List<Component> makeReadable(List<String> input) {
+        return input.stream().map(GeckoSpawners::makeReadable).collect(Collectors.toList());
     }
 
-    public Component makeReadable(String input) {
+    public static Component makeReadable(String input) {
         return MiniMessage.get().parse(input);
     }
 

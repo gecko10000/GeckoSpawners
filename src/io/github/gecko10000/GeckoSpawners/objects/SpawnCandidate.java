@@ -4,7 +4,9 @@ import de.tr7zw.nbtapi.NBTCompound;
 import de.tr7zw.nbtapi.NBTContainer;
 import de.tr7zw.nbtapi.NBTEntity;
 import de.tr7zw.nbtapi.NBTTileEntity;
+import io.github.gecko10000.GeckoSpawners.GeckoSpawners;
 import io.github.gecko10000.GeckoSpawners.util.Config;
+import io.github.gecko10000.GeckoSpawners.util.Lang;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
@@ -119,32 +121,27 @@ public class SpawnCandidate {
                     .color(TextColor.fromHexString("#08f26e"));
         } else {
             String name = getKey(entityNBT.getString("id"));
-            name = FormatUtils.toTitleCase(name.replace('_', ' '));
-            displayName = Component.text(name)
+            displayName = Component.translatable("entity.minecraft." + name)
                     .decoration(TextDecoration.ITALIC, false)
                     .color(TextColor.fromHexString("#08f26e"));
             switch (name) {
-                case "Item" -> displayName = displayName.append(Component.text(": "))
+                case "item" -> displayName = displayName.append(Component.text(": "))
                         .append(Optional.ofNullable(displayMeta.displayName())
                                 .orElse(Component.translatable(displayCopy.translationKey()))
                         );
-                case "Falling Block" -> {
+                case "falling_block" -> {
                     String blockName = getKey(entityNBT.getCompound("BlockState")
                             .getString("Name"));
-                    blockName = FormatUtils.toTitleCase(blockName.replace('_', ' '));
                     displayName = displayName.append(Component.text(": "))
-                            .append(Component.text(blockName));
+                            .append(Component.translatable("block.minecraft." + blockName));
                 }
             }
-            if (Config.showNbtInCandidateLore) {
-                lore.addAll(
-                        Arrays.stream(entityNBT.toString().split("(?<=\\G.{20})"))
-                                .map(Component::text)
-                                .map(c -> c.color(TextColor.fromHexString("#059142")))
-                                .map(c -> c.decoration(TextDecoration.ITALIC, false))
-                                .collect(Collectors.toList()));
-            }
         }
+        lore.add(Component.empty());
+        lore.addAll(Lang.candidateEditInstructions.stream()
+                .map(GeckoSpawners::makeReadable)
+                .map(c -> c.decoration(TextDecoration.ITALIC, false))
+                .collect(Collectors.toList()));
         displayMeta.displayName(displayName);
         displayMeta.lore(lore);
         displayCopy.setItemMeta(displayMeta);

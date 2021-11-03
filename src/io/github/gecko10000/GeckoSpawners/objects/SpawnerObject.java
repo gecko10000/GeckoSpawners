@@ -3,9 +3,12 @@ package io.github.gecko10000.GeckoSpawners.objects;
 import de.tr7zw.nbtapi.NBTCompound;
 import de.tr7zw.nbtapi.NBTCompoundList;
 import de.tr7zw.nbtapi.NBTItem;
+import io.github.gecko10000.GeckoSpawners.GeckoSpawners;
+import io.github.gecko10000.GeckoSpawners.util.Lang;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -24,13 +27,13 @@ public class SpawnerObject {
     public String id = UUID.randomUUID().toString();
 
     @ConfigValue
-    private Collection<SpawnCandidate> spawnCandidates = ConfigManager.collection(SpawnCandidate.class,
-            new PriorityQueue<>(Comparator.comparingInt(SpawnCandidate::getWeight).reversed()));
+    private List<SpawnCandidate> spawnCandidates = ConfigManager.list(SpawnCandidate.class);
 
     public SpawnerObject() {}
 
     public SpawnerObject add(SpawnCandidate candidate) {
         spawnCandidates.add(candidate);
+        spawnCandidates.sort(Comparator.comparingInt(SpawnCandidate::getWeight).reversed());
         return this;
     }
 
@@ -66,19 +69,19 @@ public class SpawnerObject {
         meta.displayName(Component.text(this.id)
                 .decoration(TextDecoration.ITALIC, false)
                 .color(TextColor.fromHexString("#08f26e")));
-        meta.lore(spawnCandidates.stream()
+        List<Component> lore = spawnCandidates.stream()
                 .map(sc -> sc.getDisplayItem().getItemMeta().displayName()
                         .append(Component.text(" - " + sc.getWeight()))
                         .color(TextColor.fromHexString("#06a94d")))
+                .collect(Collectors.toList());
+        lore.add(Component.empty());
+        lore.addAll(Lang.spawnerEditInstructions.stream()
+                .map(GeckoSpawners::makeReadable)
+                .map(c -> c.decoration(TextDecoration.ITALIC, false))
                 .collect(Collectors.toList()));
+        meta.lore(lore);
         spawner.setItemMeta(meta);
         return spawner;
-    }
-
-    public List<ItemStack> getDisplayItems() {
-        return spawnCandidates.stream()
-                .map(SpawnCandidate::getDisplayItem)
-                .collect(Collectors.toList());
     }
 
 }

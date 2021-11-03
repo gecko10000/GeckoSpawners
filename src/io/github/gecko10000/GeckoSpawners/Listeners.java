@@ -110,8 +110,8 @@ public class Listeners implements Listener {
             evt.setCancelled(true);
             String message = PlainTextComponentSerializer.plainText().serialize(evt.message());
             if (editor.settingName != null && !editor.settingName.isDone()) {
-                if (plugin.spawnerObjects.keySet().contains(message) && !message.equals(editor.getSpawner().id)) {
-                    player.sendMessage(plugin.makeReadable(Lang.spawnerNameExists));
+                if (plugin.spawnerObjects.containsKey(message) && !message.equals(editor.getSpawner().id)) {
+                    player.sendMessage(GeckoSpawners.makeReadable(Lang.spawnerNameExists));
                     return;
                 }
                 Task.syncDelayed(() -> editor.settingName.complete(message), 2);
@@ -126,7 +126,7 @@ public class Listeners implements Listener {
             }
             Integer numInput = parseInt(message);
             if (numInput == null || numInput <= 0) {
-                player.sendMessage(plugin.makeReadable(Lang.enterValidInput));
+                player.sendMessage(GeckoSpawners.makeReadable(Lang.enterValidInput));
                 return;
             }
             plugin.previousEditors.remove(player);
@@ -136,7 +136,7 @@ public class Listeners implements Listener {
     }
 
     private SpawnCandidate finishEditing(Player player, SpawnerEditor editor) {
-        Task.syncDelayed(() -> editor.open());
+        Task.syncDelayed(editor::open);
         return plugin.editingCandidates.remove(player);
     }
 
