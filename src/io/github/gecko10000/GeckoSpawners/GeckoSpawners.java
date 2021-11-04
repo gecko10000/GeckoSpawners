@@ -13,6 +13,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -20,7 +21,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 import redempt.redlib.configmanager.ConfigManager;
 import redempt.redlib.configmanager.annotations.ConfigValue;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class GeckoSpawners extends JavaPlugin {
@@ -33,6 +37,8 @@ public class GeckoSpawners extends JavaPlugin {
     public Map<Player, SpawnerEditor> previousEditors = new HashMap<>();
 
     public MainEditor editor;
+
+    public static final NamespacedKey SPAWNER_NAME_KEY = NamespacedKey.fromString("geckospawners:name");
 
     public void onEnable() {
         reload();
@@ -52,6 +58,7 @@ public class GeckoSpawners extends JavaPlugin {
                 .register(Lang.class).saveDefaults().load();
         spawnerConfig = new ConfigManager(this, "spawners.yml")
                 .addConverter(NBTCompound.class, NBTContainer::new, NBTCompound::toString)
+                .addConverter(Material.class, Material::getMaterial, Material::toString)
                 .register(this).saveDefaults().load();
         editor = new MainEditor(this);
     }

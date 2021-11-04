@@ -1,10 +1,11 @@
 geckospawners,gs {
+    geckospawners.command
     reload,r {
         permission geckospawners.reload
         hook reload
         help Reload the plugin configs
     }
-    edit,e {
+    edit,editor,e {
         permission geckospawners.edit
         user player
         help Create, edit, and remove custom spawners

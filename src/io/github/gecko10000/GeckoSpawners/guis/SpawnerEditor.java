@@ -34,7 +34,7 @@ public class SpawnerEditor {
         this.spawner = spawner;
 
         this.gui = new InventoryGUI(Bukkit.createInventory(null, SIZE, GeckoSpawners.makeReadable(Lang.guiSpawnerTitle
-                .replace("%name%", spawner.id))));
+                .replace("%name%", spawner.name))));
         this.panel = new PaginationPanel(gui);
         addBottomBar();
         panel.addSlots(0, SIZE - 9);
@@ -73,8 +73,8 @@ public class SpawnerEditor {
             settingName = new CompletableFuture<>();
             enterEditMode((Player) evt.getWhoClicked(), null);
             settingName.thenAccept(name -> {
-                SpawnerObject temp = plugin.spawnerObjects.remove(this.spawner.id);
-                this.spawner.id = name;
+                SpawnerObject temp = plugin.spawnerObjects.remove(this.spawner.name);
+                this.spawner.name = name;
                 plugin.spawnerObjects.put(name, temp);
                 plugin.spawnerConfig.save();
                 new SpawnerEditor(plugin, player, spawner);
@@ -111,7 +111,7 @@ public class SpawnerEditor {
         if (candidate != null) {
             GeckoSpawners.makeReadable(Lang.enterEditMode).forEach(player::sendMessage);
         } else {
-            player.sendMessage(GeckoSpawners.makeReadable(Lang.enterNamingMode.replace("%name%", this.spawner.id)));
+            player.sendMessage(GeckoSpawners.makeReadable(Lang.enterNamingMode.replace("%name%", this.spawner.name)));
         }
         plugin.spawnerConfig.save();
     }

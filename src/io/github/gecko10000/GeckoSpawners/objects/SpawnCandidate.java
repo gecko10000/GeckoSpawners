@@ -19,7 +19,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import redempt.redlib.configmanager.annotations.ConfigMappable;
 import redempt.redlib.configmanager.annotations.ConfigValue;
-import redempt.redlib.misc.FormatUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,6 +39,11 @@ public class SpawnCandidate {
     private NBTCompound entityNBT;
 
     public SpawnCandidate() {}
+
+    public SpawnCandidate(NBTCompound fromPotential) {
+        entityNBT = fromPotential.getCompound("Entity");
+        weight = fromPotential.getInteger("Weight");
+    }
 
     public SpawnCandidate setWeight(int weight) {
         this.weight = weight;

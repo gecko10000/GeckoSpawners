@@ -51,7 +51,7 @@ public class MainEditor {
                 .addItemFlags(ItemFlag.HIDE_ENCHANTS), evt -> {
             SpawnerObject spawner = new SpawnerObject();
             panel.setPage(panel.getMaxPage());
-            plugin.spawnerObjects.put(spawner.id, spawner);
+            plugin.spawnerObjects.put(spawner.name, spawner);
             plugin.spawnerConfig.save();
             new SpawnerEditor(plugin, (Player) evt.getWhoClicked(), spawner);
             update();
@@ -73,7 +73,7 @@ public class MainEditor {
             Player player = (Player) evt.getWhoClicked();
             switch (evt.getClick()) {
                 case SHIFT_RIGHT, SHIFT_LEFT -> {
-                    plugin.spawnerObjects.remove(spawner.id);
+                    plugin.spawnerObjects.remove(spawner.name);
                     plugin.spawnerConfig.save();
                     update();
                 }
