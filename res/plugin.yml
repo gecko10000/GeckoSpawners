@@ -5,5 +5,7 @@ api-version: 1.13
 depend:
 - RedLib
 permissions:
-  geckospawners.nosilk:
+  geckospawners.silk:
+    default: op
+  geckospawners.silk.bypass:
     default: false

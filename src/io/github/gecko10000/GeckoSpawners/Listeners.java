@@ -160,7 +160,10 @@ public class Listeners implements Listener {
             if (!Config.spawnerMiningTools.contains(tool.getType())) {
                 return;
             }
-            if (!tool.containsEnchantment(Enchantment.SILK_TOUCH) && !player.hasPermission("geckospawners.nosilk")) {
+            if (!player.hasPermission("geckospawners.silk")) {
+                return;
+            }
+            if (!tool.containsEnchantment(Enchantment.SILK_TOUCH) && !player.hasPermission("geckospawners.silk.bypass")) {
                 return;
             }
             evt.setExpToDrop(0);
