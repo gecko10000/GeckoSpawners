@@ -42,7 +42,7 @@ public class MainEditor {
     }
 
     private void addBottomBar() {
-        gui.addButton(SIZE - 3, ItemButton.create(plugin.pageItem(true), evt -> {
+        gui.addButton(SIZE - 3, ItemButton.create(plugin.pageItem(false), evt -> {
             panel.nextPage();
             update();
         }));
@@ -56,7 +56,7 @@ public class MainEditor {
             new SpawnerEditor(plugin, (Player) evt.getWhoClicked(), spawner);
             update();
         }));
-        gui.addButton(SIZE - 7, ItemButton.create(plugin.pageItem(false), evt -> {
+        gui.addButton(SIZE - 7, ItemButton.create(plugin.pageItem(true), evt -> {
             panel.prevPage();
             update();
         }));
