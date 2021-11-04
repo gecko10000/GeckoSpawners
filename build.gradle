@@ -29,7 +29,7 @@ repositories {
 
 dependencies {
     compileOnly 'io.papermc.paper:paper-api:1.17.1-R0.1-SNAPSHOT'
-    implementation 'com.github.Redempt:RedLib:6.1.0.3'
+    compileOnly 'com.github.Redempt:RedLib:6.1.0.3'
     implementation 'net.kyori:adventure-text-minimessage:4.1.0-SNAPSHOT'
     implementation 'de.tr7zw:item-nbt-api-plugin:2.8.0'
 }
