@@ -35,7 +35,6 @@ dependencies {
 }
 
 shadowJar {
-    relocate 'redempt.redlib', 'io.github.gecko10000.GeckoSpawners.redlib'
     relocate 'de.tr7zw', 'io.github.gecko10000.GeckoSpawners.nbtapi'
 }
 
