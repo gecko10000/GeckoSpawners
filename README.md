@@ -33,8 +33,6 @@ The plugin supports [MiniMessage](https://docs.adventure.kyori.net/minimessage#f
 
 ## Permissions
 
-* `minecraft.nbt.place` - required for players to be able to place spawners properly
-
 * `geckospawners.command` - permission associated with the base command - grant it to tab-complete `/geckospawners`
 * `geckospawners.edit` - permission for opening the editing GUI
 * `geckospawners.reload` - permission to reload the configs
