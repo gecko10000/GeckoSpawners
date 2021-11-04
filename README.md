@@ -25,6 +25,8 @@ Inside of each spawner, you will be able to edit the list of spawn candidates fo
 
 The plugin supports [MiniMessage](https://docs.adventure.kyori.net/minimessage#format), so use it to your heart's content.
 
+Spawners are mineable and will maintain their structure when picked up.
+
 ## Commands
 
 `/geckospawners` (`/gs`):
@@ -33,6 +35,8 @@ The plugin supports [MiniMessage](https://docs.adventure.kyori.net/minimessage#f
 
 ## Permissions
 
+* `geckospawners.silk` - permission required to mine spawners with silk touch
+* `geckospawners.silk.bypass` - permission to bypass silk touch requirement for mining spawners - `default false`
 * `geckospawners.command` - permission associated with the base command - grant it to tab-complete `/geckospawners`
 * `geckospawners.edit` - permission for opening the editing GUI
 * `geckospawners.reload` - permission to reload the configs
