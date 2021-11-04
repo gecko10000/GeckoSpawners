@@ -9,7 +9,7 @@ This plugin allows spawners to spawn:
 * items
 * falling blocks (with block states and tile data included - you can rain down chests pre-filled with diamonds!)
 
-Did you know that spawners can have *multiple* spawning candidates? Bet you didn't!
+Did you know that spawners can have *multiple* spawning candidates in one spawner? Bet you didn't!
 
 You can add multiple different spawning candidates with differing weights to the spawner, meaning it can spawn multiple things at random!
 
