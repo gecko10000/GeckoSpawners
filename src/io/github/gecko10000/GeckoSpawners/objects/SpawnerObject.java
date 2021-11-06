@@ -7,7 +7,6 @@ import de.tr7zw.nbtapi.NBTTileEntity;
 import io.github.gecko10000.GeckoSpawners.GeckoSpawners;
 import io.github.gecko10000.GeckoSpawners.util.Lang;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Material;
 import org.bukkit.block.CreatureSpawner;
@@ -104,9 +103,11 @@ public class SpawnerObject {
 
     private List<Component> loreComponents() {
         return spawnCandidates.stream()
-                .map(sc -> sc.getDisplayItem().getItemMeta().displayName()
-                        .append(Component.text(" - " + sc.getWeight()))
-                        .color(TextColor.fromHexString("#06a94d")))
+                .map(sc -> GeckoSpawners.makeReadable(Lang.spawnerCandidateFormat)
+                        .replaceText(builder -> builder.matchLiteral("%type%")
+                                .replacement(sc.getDisplayItem().getItemMeta().displayName().color(null)))
+                        .replaceText(builder -> builder.matchLiteral("%weight%")
+                                .replacement(Component.text(sc.getWeight() + "").decoration(TextDecoration.ITALIC, false))))
                 .collect(Collectors.toList());
     }
 

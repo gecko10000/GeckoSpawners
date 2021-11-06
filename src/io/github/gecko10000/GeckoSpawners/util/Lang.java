@@ -54,4 +54,7 @@ public class Lang {
     @ConfigValue("error.spawner-name-exists")
     public static String spawnerNameExists = "<red>A spawner with that name already exists.";
 
+    @ConfigValue("spawner-candidate-format")
+    public static String spawnerCandidateFormat = "<#06a94d>%type% - %weight%";
+
 }
