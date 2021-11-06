@@ -30,6 +30,16 @@ public class Lang {
     @ConfigValue("gui.spawner.create")
     public static String guiSpawnerCreateCandidate = "<#059142>Create Spawn Candidate";
 
+    @ConfigValue("gui.spawner.data-button-name")
+    public static String guiSpawnerDataButton = "<#059142>Edit %data%";
+    @ConfigValue("gui.spawner.data-button-lore")
+    public static List<String> guiSpawnerDataButtonLore = Arrays.asList(
+            "<green>Left click to increase by 1",
+            "<green>Shift+left click to increase by 10",
+            "<green>Right click to decrease by 1",
+            "<green>Shift+right click to decrease by 10"
+    );
+
     @ConfigValue("reload-success")
     public static String reloadSuccess = "<green>Configs reloaded!";
 

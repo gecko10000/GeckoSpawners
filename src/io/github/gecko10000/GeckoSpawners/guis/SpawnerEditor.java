@@ -4,11 +4,14 @@ import io.github.gecko10000.GeckoSpawners.GeckoSpawners;
 import io.github.gecko10000.GeckoSpawners.objects.SpawnCandidate;
 import io.github.gecko10000.GeckoSpawners.objects.SpawnerObject;
 import io.github.gecko10000.GeckoSpawners.util.Lang;
+import io.github.gecko10000.GeckoSpawners.util.ShortWrapper;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import redempt.redlib.inventorygui.InventoryGUI;
 import redempt.redlib.inventorygui.ItemButton;
 import redempt.redlib.inventorygui.PaginationPanel;
@@ -48,7 +51,7 @@ public class SpawnerEditor {
         gui.open(player);
         plugin.spawnerConfig.save();
     }
-
+    //TODO: add controls for spawner attributes (there are 7!)
     private void addBottomBar() {
         gui.addButton(SIZE - 9, ItemButton.create(plugin.backItem(), evt -> {
             plugin.editor.update();
@@ -100,6 +103,27 @@ public class SpawnerEditor {
                 }
                 default -> enterEditMode((Player) evt.getWhoClicked(), candidate);
             }
+        });
+    }
+
+    private ItemButton buttonForData(ShortWrapper spawnerData, Material material, String name) {
+        ItemStack item = new ItemBuilder(material).setCount(spawnerData.value);
+        ItemMeta meta = item.getItemMeta();
+        meta.displayName(GeckoSpawners.makeReadable(Lang.guiSpawnerDataButton)
+                .replaceText(builder -> builder.matchLiteral("%data%")
+                        .replacement(name)));
+        meta.lore(GeckoSpawners.makeReadable(Lang.guiSpawnerDataButtonLore));
+        item.setItemMeta(meta);
+        return ItemButton.create(item, evt -> {
+            if (evt.isLeftClick()) {
+                spawnerData.value += evt.isShiftClick() ? 10 : 1;
+            } else if (evt.isRightClick()) {
+                spawnerData.value -= evt.isShiftClick() ? 10 : 1;
+            }
+            if (spawnerData.value < 0) {
+                spawnerData.value = 0;
+            }
+            update();
         });
     }
 

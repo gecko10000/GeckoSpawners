@@ -8,6 +8,7 @@ import io.github.gecko10000.GeckoSpawners.objects.SpawnCandidate;
 import io.github.gecko10000.GeckoSpawners.objects.SpawnerObject;
 import io.github.gecko10000.GeckoSpawners.util.Config;
 import io.github.gecko10000.GeckoSpawners.util.Lang;
+import io.github.gecko10000.GeckoSpawners.util.ShortWrapper;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
@@ -59,6 +60,7 @@ public class GeckoSpawners extends JavaPlugin {
         spawnerConfig = new ConfigManager(this, "spawners.yml")
                 .addConverter(NBTCompound.class, NBTContainer::new, NBTCompound::toString)
                 .addConverter(Material.class, Material::getMaterial, Material::toString)
+                .addConverter(ShortWrapper.class, ShortWrapper::new, ShortWrapper::toString)
                 .register(this).saveDefaults().load();
         editor = new MainEditor(this);
     }

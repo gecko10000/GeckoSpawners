@@ -5,7 +5,9 @@ import de.tr7zw.nbtapi.NBTCompoundList;
 import de.tr7zw.nbtapi.NBTItem;
 import de.tr7zw.nbtapi.NBTTileEntity;
 import io.github.gecko10000.GeckoSpawners.GeckoSpawners;
+import io.github.gecko10000.GeckoSpawners.util.Config;
 import io.github.gecko10000.GeckoSpawners.util.Lang;
+import io.github.gecko10000.GeckoSpawners.util.ShortWrapper;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Material;
@@ -32,6 +34,28 @@ public class SpawnerObject {
 
     @ConfigValue
     private List<SpawnCandidate> spawnCandidates = ConfigManager.list(SpawnCandidate.class);
+
+    // default of 20 will be used, or average of min and max if set in config
+    @ConfigValue
+    public ShortWrapper delay = new ShortWrapper(Config.fixShortDelayOnSpawnerPlace ? 500 : 20);
+
+    @ConfigValue
+    public ShortWrapper minSpawnDelay = new ShortWrapper(200);
+
+    @ConfigValue
+    public ShortWrapper maxSpawnDelay = new ShortWrapper(800);
+
+    @ConfigValue
+    public ShortWrapper spawnRange = new ShortWrapper(4);
+
+    @ConfigValue
+    public ShortWrapper spawnCount = new ShortWrapper(4);
+
+    @ConfigValue
+    public ShortWrapper maxNearbyEntities = new ShortWrapper(6);
+
+    @ConfigValue
+    public ShortWrapper requiredPlayerRange = new ShortWrapper(16);
 
     public SpawnerObject() {}
 
