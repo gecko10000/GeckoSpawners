@@ -13,12 +13,12 @@ public class ShortWrapper {
     }
 
     public ShortWrapper(String initialValue) {
-        this.value = Short.parseShort(initialValue);
+        this.value = Short.parseShort(initialValue.substring(0, initialValue.length() - 1));
     }
 
     @Override
     public String toString() {
-        return this.value + "";
+        return this.value + "s";
     }
 
 }

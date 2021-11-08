@@ -5,6 +5,7 @@ import io.github.gecko10000.GeckoSpawners.objects.SpawnCandidate;
 import io.github.gecko10000.GeckoSpawners.objects.SpawnerObject;
 import io.github.gecko10000.GeckoSpawners.util.Lang;
 import io.github.gecko10000.GeckoSpawners.util.ShortWrapper;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -40,7 +41,7 @@ public class SpawnerEditor {
                 .replace("%name%", spawner.name))));
         this.panel = new PaginationPanel(gui);
         addBottomBar();
-        panel.addSlots(0, SIZE - 9);
+        panel.addSlots(0, SIZE - 18);
         gui.setDestroyOnClose(false);
         gui.setReturnsItems(false);
         open();
@@ -83,6 +84,13 @@ public class SpawnerEditor {
                 new SpawnerEditor(plugin, player, spawner);
             });
         }));
+        dataButton(SIZE - 17, spawner.delay, Material.CLOCK, "Delay");
+        dataButton(SIZE - 16, spawner.minSpawnDelay, Material.REDSTONE, "Min Spawn Delay");
+        dataButton(SIZE - 15, spawner.maxSpawnDelay, Material.REPEATER, "Max Spawn Delay");
+        dataButton(SIZE - 14, spawner.spawnRange, Material.MOSS_BLOCK, "Spawn Range");
+        dataButton(SIZE - 13, spawner.spawnCount, Material.MELON_SEEDS, "Spawn Count");
+        dataButton(SIZE - 12, spawner.maxNearbyEntities, Material.LEAD, "Max Nearby Entities");
+        dataButton(SIZE - 11, spawner.requiredPlayerRange, Material.ENDER_EYE, "Required Player Range");
     }
 
     public CompletableFuture<String> settingName;
@@ -106,15 +114,8 @@ public class SpawnerEditor {
         });
     }
 
-    private ItemButton buttonForData(ShortWrapper spawnerData, Material material, String name) {
-        ItemStack item = new ItemBuilder(material).setCount(spawnerData.value);
-        ItemMeta meta = item.getItemMeta();
-        meta.displayName(GeckoSpawners.makeReadable(Lang.guiSpawnerDataButton)
-                .replaceText(builder -> builder.matchLiteral("%data%")
-                        .replacement(name)));
-        meta.lore(GeckoSpawners.makeReadable(Lang.guiSpawnerDataButtonLore));
-        item.setItemMeta(meta);
-        return ItemButton.create(item, evt -> {
+    private void dataButton(int slot, ShortWrapper spawnerData, Material material, String name) {
+        gui.addButton(slot, ItemButton.create(dataButtonItem(spawnerData, material, name), evt -> {
             if (evt.isLeftClick()) {
                 spawnerData.value += evt.isShiftClick() ? 10 : 1;
             } else if (evt.isRightClick()) {
@@ -123,8 +124,25 @@ public class SpawnerEditor {
             if (spawnerData.value < 0) {
                 spawnerData.value = 0;
             }
-            update();
-        });
+            plugin.spawnerConfig.save();
+            gui.getInventory().setItem(slot, dataButtonItem(spawnerData, material, name));
+        }));
+    }
+
+    private ItemStack dataButtonItem(ShortWrapper spawnerData, Material material, String name) {
+        ItemStack item = new ItemBuilder(material).setCount(Math.max(1, spawnerData.value));
+        ItemMeta meta = item.getItemMeta();
+        meta.displayName(GeckoSpawners.makeReadable(Lang.guiSpawnerDataButton)
+                .decoration(TextDecoration.ITALIC, false)
+                .replaceText(builder -> builder.matchLiteral("%data%")
+                        .replacement(name))
+                .replaceText(builder -> builder.matchLiteral("%amount%")
+                        .replacement(spawnerData.value + "")));
+        meta.lore(GeckoSpawners.makeReadable(Lang.guiSpawnerDataButtonLore).stream()
+                .map(c -> c.decoration(TextDecoration.ITALIC, false))
+                .collect(Collectors.toList()));
+        item.setItemMeta(meta);
+        return item;
     }
 
     private void enterEditMode(Player player, SpawnCandidate candidate) {

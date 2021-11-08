@@ -31,7 +31,7 @@ public class Lang {
     public static String guiSpawnerCreateCandidate = "<#059142>Create Spawn Candidate";
 
     @ConfigValue("gui.spawner.data-button-name")
-    public static String guiSpawnerDataButton = "<#059142>Edit %data%";
+    public static String guiSpawnerDataButton = "<#059142>Edit %data% - %amount%";
     @ConfigValue("gui.spawner.data-button-lore")
     public static List<String> guiSpawnerDataButtonLore = Arrays.asList(
             "<green>Left click to increase by 1",

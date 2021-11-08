@@ -1,9 +1,6 @@
 package io.github.gecko10000.GeckoSpawners.objects;
 
-import de.tr7zw.nbtapi.NBTCompound;
-import de.tr7zw.nbtapi.NBTCompoundList;
-import de.tr7zw.nbtapi.NBTItem;
-import de.tr7zw.nbtapi.NBTTileEntity;
+import de.tr7zw.nbtapi.*;
 import io.github.gecko10000.GeckoSpawners.GeckoSpawners;
 import io.github.gecko10000.GeckoSpawners.util.Config;
 import io.github.gecko10000.GeckoSpawners.util.Lang;
@@ -93,6 +90,13 @@ public class SpawnerObject {
         }
         NBTItem nbtItem = new NBTItem(spawner);
         NBTCompound blockEntityTag = nbtItem.getOrCreateCompound("BlockEntityTag");
+        blockEntityTag.mergeCompound(shortCompound("Delay", delay));
+        blockEntityTag.mergeCompound(shortCompound("MinSpawnDelay", minSpawnDelay));
+        blockEntityTag.mergeCompound(shortCompound("MaxSpawnDelay", maxSpawnDelay));
+        blockEntityTag.mergeCompound(shortCompound("MaxNearbyEntities", maxNearbyEntities));
+        blockEntityTag.mergeCompound(shortCompound("RequiredPlayerRange", requiredPlayerRange));
+        blockEntityTag.mergeCompound(shortCompound("SpawnCount", spawnCount));
+        blockEntityTag.mergeCompound(shortCompound("SpawnRange", spawnRange));
         NBTCompound spawnData = blockEntityTag.getOrCreateCompound("SpawnData");
         spawnData.mergeCompound(nonNullSpawnCandidates.iterator().next().asCompound());
         NBTCompoundList spawnPotentials = blockEntityTag.getCompoundList("SpawnPotentials");
@@ -103,6 +107,12 @@ public class SpawnerObject {
         meta.lore(loreComponents());
         spawner.setItemMeta(meta);
         return spawner;
+    }
+
+    public NBTCompound shortCompound(String key, ShortWrapper value) {
+        NBTContainer container = new NBTContainer();
+        container.setShort(key, value.value);
+        return container;
     }
 
     public ItemStack getDisplayItem() {
