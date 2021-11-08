@@ -21,11 +21,11 @@ To begin creating/editing spawners, enter the editor with `/geckospawners editor
 
 There, you will see the list of spawners. Click the one at the bottom to create a new one.
 
-Inside of each spawner, you will be able to edit the list of spawn candidates for the spawner, the name of the spawner, and the weight of the spawn candidates.
+Inside of each spawner, you will be able to edit the list of spawn candidates for the spawner, the name of the spawner, data values for the spawner (delay, range, spawn count, required player range, etc.) and the weight of the spawn candidates.
 
 The plugin supports [MiniMessage](https://docs.adventure.kyori.net/minimessage#format), so use it to your heart's content.
 
-Spawners are mineable and will maintain their structure when picked up.
+Spawners are mineable and will maintain their information when picked up.
 
 ## Commands
 
