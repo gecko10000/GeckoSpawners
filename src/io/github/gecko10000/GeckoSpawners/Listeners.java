@@ -189,9 +189,6 @@ public class Listeners implements Listener {
                 spawner = (CreatureSpawner) evt.getBlock().getState();
                 spawner.getPersistentDataContainer().set(GeckoSpawners.SPAWNER_NAME_KEY, PersistentDataType.STRING, serializedName);
             }
-            if (Config.fixShortDelayOnSpawnerPlace) {
-                spawner.setDelay((spawner.getMaxSpawnDelay() + spawner.getMinSpawnDelay())/2);
-            }
             spawner.update();
         });
     }

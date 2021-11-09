@@ -34,25 +34,25 @@ public class SpawnerObject {
 
     // default of 20 will be used, or average of min and max if set in config
     @ConfigValue
-    public ShortWrapper delay = new ShortWrapper(Config.fixShortDelayOnSpawnerPlace ? 500 : 20);
+    public ShortWrapper delay = Config.defaultDelay;
 
     @ConfigValue
-    public ShortWrapper minSpawnDelay = new ShortWrapper(200);
+    public ShortWrapper minSpawnDelay = Config.defaultMinSpawnDelay;
 
     @ConfigValue
-    public ShortWrapper maxSpawnDelay = new ShortWrapper(800);
+    public ShortWrapper maxSpawnDelay = Config.defaultMaxSpawnDelay;
 
     @ConfigValue
-    public ShortWrapper spawnRange = new ShortWrapper(4);
+    public ShortWrapper spawnRange = Config.defaultSpawnRange;
 
     @ConfigValue
-    public ShortWrapper spawnCount = new ShortWrapper(4);
+    public ShortWrapper spawnCount = Config.defaultSpawnCount;
 
     @ConfigValue
-    public ShortWrapper maxNearbyEntities = new ShortWrapper(6);
+    public ShortWrapper maxNearbyEntities = Config.defaultMaxNearbyEntities;
 
     @ConfigValue
-    public ShortWrapper requiredPlayerRange = new ShortWrapper(16);
+    public ShortWrapper requiredPlayerRange = Config.defaultRequiredPlayerRange;
 
     public SpawnerObject() {}
 

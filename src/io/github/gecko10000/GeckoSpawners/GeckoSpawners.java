@@ -54,6 +54,7 @@ public class GeckoSpawners extends JavaPlugin {
 
     public void reload() {
         new ConfigManager(this)
+                .addConverter(ShortWrapper.class, ShortWrapper::new, ShortWrapper::toString)
                 .register(Config.class).saveDefaults().load();
         new ConfigManager(this, "lang.yml")
                 .register(Lang.class).saveDefaults().load();

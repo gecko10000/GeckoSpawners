@@ -25,8 +25,26 @@ public class Config {
     @ConfigValue("default-falling-blocks-dont-drop-items")
     public static boolean defaultFallingBlocksDontDropItems = false;
 
-    @ConfigValue("fix-short-delay-on-spawner-place")
-    public static boolean fixShortDelayOnSpawnerPlace = false;
+    @ConfigValue("default-data.Delay")
+    public static ShortWrapper defaultDelay = new ShortWrapper(20);
+
+    @ConfigValue("default-data.MinSpawnDelay")
+    public static ShortWrapper defaultMinSpawnDelay = new ShortWrapper(200);
+
+    @ConfigValue("default-data.MaxSpawnDelay")
+    public static ShortWrapper defaultMaxSpawnDelay = new ShortWrapper(800);
+
+    @ConfigValue("default-data.MaxNearbyEntities")
+    public static ShortWrapper defaultMaxNearbyEntities = new ShortWrapper(6);
+
+    @ConfigValue("default-data.SpawnRange")
+    public static ShortWrapper defaultSpawnRange = new ShortWrapper(4);
+
+    @ConfigValue("default-data.SpawnCount")
+    public static ShortWrapper defaultSpawnCount = new ShortWrapper(4);
+
+    @ConfigValue("default-data.RequiredPlayerRange")
+    public static ShortWrapper defaultRequiredPlayerRange = new ShortWrapper(16);
 
     @ConfigValue("spawner-mining-tools")
     public static Set<Material> spawnerMiningTools = ConfigManager.set(Material.class,

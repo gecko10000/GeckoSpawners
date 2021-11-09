@@ -31,13 +31,14 @@ public class Lang {
     public static String guiSpawnerCreateCandidate = "<#059142>Create Spawn Candidate";
 
     @ConfigValue("gui.spawner.data-button-name")
-    public static String guiSpawnerDataButton = "<#059142>Edit %data% - %amount%";
+    public static String guiSpawnerDataButton = "<#77dd77><underlined>%amount%</underlined> <black>| <#059142>%data%";
     @ConfigValue("gui.spawner.data-button-lore")
     public static List<String> guiSpawnerDataButtonLore = Arrays.asList(
-            "<green>Left click to increase by 1",
-            "<green>Shift+left click to increase by 10",
-            "<green>Right click to decrease by 1",
-            "<green>Shift+right click to decrease by 10"
+            "",
+            "<green>+1 <black>|<#06a94d> Left click",
+            "<green>+10 <black>|<#06a94d> Shift+left click",
+            "<red>-1 <black>|<#06a94d> Right click",
+            "<red>-10 <black>|<#06a94d> Shift+right click"
     );
 
     @ConfigValue("reload-success")
