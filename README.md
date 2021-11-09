@@ -47,6 +47,6 @@ Spawners are mineable and will maintain their information when picked up.
 * `tile-entity-removed-values` - the list of NBT tags to remove from tile entities when saving them.
 * `falling-block-time` - the value to set for falling blocks (default is 0, which makes the block disappear after one tick - not ideal).
 * `center-falling-blocks` - centers falling blocks, useful if you want them to land and turn into blocks more often.
-* `default-falling-blocks-dont-drop-items` - turns off falling blocks dropping items (not the item that spawns when breaking the block after it lands). This is useful when used with `center-falling-blocks` if you want blocks that can only be picked up.
+* `default-falling-blocks-dont-drop-items` - turns off falling blocks dropping items (not the item that spawns when breaking the block after it lands). This is useful when used with `center-falling-blocks` if you want blocks that can only be picked up, so players can't just make a floor out of torches and pick up the items directly.
 * `fix-short-delay-on-spawner-place` - something I've found useful in my experience, as when spawners are placed, the delay is set very low and allows a sort of exploitation in this way. This option will set the delay to the average of the minimum and maximum when the spawner is placed.
 * `spawner-mining-tools` - the list of items that can be used to mine spawners (remember that you do need the proper permissions as well).
