@@ -64,6 +64,13 @@ public class SpawnerObject {
         potentials.stream()
                 .map(SpawnCandidate::new)
                 .forEach(this::add);
+        delay.value = tileNbt.getShort("Delay");
+        minSpawnDelay.value = tileNbt.getShort("MinSpawnDelay");
+        maxSpawnDelay.value = tileNbt.getShort("MaxSpawnDelay");
+        maxNearbyEntities.value = tileNbt.getShort("MaxNearbyEntities");
+        requiredPlayerRange.value = tileNbt.getShort("RequiredPlayerRange");
+        spawnCount.value = tileNbt.getShort("SpawnCount");
+        spawnRange.value = tileNbt.getShort("SpawnRange");
     }
 
     public SpawnerObject add(SpawnCandidate candidate) {
