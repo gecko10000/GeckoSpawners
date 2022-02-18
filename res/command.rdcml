@@ -1,5 +1,5 @@
 geckospawners,gs {
-    geckospawners.command
+    permission geckospawners.command
     reload,r {
         permission geckospawners.reload
         hook reload
